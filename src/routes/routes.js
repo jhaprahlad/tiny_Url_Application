@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 // const urlModel = require('../model/urlModel') // importing urlmodel
-const { createUrl, getUrl } = require('../controller/urlContoller')
+const { createUrl, getUrl } = require('../controller/urlcontroller')
 
 
 // creating get and Post api 

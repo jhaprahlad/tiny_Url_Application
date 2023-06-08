@@ -1,32 +1,32 @@
-// importing packages and libraries
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+//importing redis and util package
+const redis = require('redis');
+const {promisify} = require('util');
+
+// redis connection
+const client = redis.createClient(
+    18359,
+    "redis-18359.c61.us-east-1-3.ec2.cloud.redislabs.com",
+    {no_ready_check: true}
+);
 
 
-
-const app = express();// calling express
-dotenv.config();
-
-
-
-const route = require("./routes/routes") // routing
-
-// database connection
-mongoose.connect(process.env.MONGO_URI).then(
-    console.log('mongodb is connnected')
-).catch(
-    err => { console.error(err.message) }
-)
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-app.use('/', route) //routing
-
-
-//starting server
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`)
+// redis authorization
+client.auth('CSAYbyXwTnRJ9hSZBHjuO7pPR2YlWoYN',function(err){
+    if(err){
+        console.log(err);
+    }
 })
 
+// using SETEX and GET functionality of redis
+const SETEX_ASYNC = promisify(client.SETEX).bind(client);
+const GET_ASYNC = promisify(client.GET).bind(client)
+
+
+
+client.on('connect', () => {
+    console.log('Redis connected');
+});
+
+// exporting 
+module.exports.GET_ASYNC = GET_ASYNC
+module.exports.SETEX_ASYNC = SETEX_ASYNC
