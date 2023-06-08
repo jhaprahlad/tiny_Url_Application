@@ -1,5 +1,4 @@
 # url_shortner_project
-# Technetium
 
 ## Scalable URL Shortner Project Requirement
 
